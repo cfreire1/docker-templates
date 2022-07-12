@@ -1,10 +1,12 @@
+# Datos de Imagen
 * docker-oracle-xe-11g (IMG)
    * link:https://hub.docker.com/r/oracleinanutshell/oracle-xe-11g
-***
+# Instrucciones (Apex)
 * Login http://localhost:<port>/apex/apex_admin with following credential:
     * username: ADMIN
     * password: admin (Pedira cambiar)
-***
+  
+# Instrucciones (Normal)
 * crear nuevo usuario
 * CREAR USER Y PASS
 ```
@@ -15,7 +17,7 @@
     GRANT CONNECT, RESOURCE, DBA TO ORACLE_USER;
 ```
       
-***
+# Credenciales para ingresar
 * Usuario para conectar
 ```
     Connect: xe
