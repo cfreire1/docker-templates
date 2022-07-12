@@ -1,8 +1,7 @@
-### Servidor plex
-***
+# Servidor plex
 * Acceso: http://localhost:32400/web/index.html
-***
-### Link:
+
+# Links:
 * https://hub.docker.com/r/plexinc/pms-docker
 * https://docs.diladele.com/docker/timezones.html
 * https://quickbox.io/knowledge-base/claim-plex/
