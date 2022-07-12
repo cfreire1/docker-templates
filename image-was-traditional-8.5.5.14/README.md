@@ -1,13 +1,7 @@
 
 # Descripcion
 
-Proyecto docker de servidor was  
+Proyecto docker de servidor (WebSphere Application Server trial)  
 * publicado en docker hub 
+  * Link Docker Hub: https://hub.docker.com/r/heremod/websphere-traditional
 
-# WebSphere Application Server
-* PATH: /traditional/8.5.5.14
-* repo: heremod/websphere-traditional
-* tag: 8.5.5.14 //sin profile
-* tag: 8.5.5.14-profile //con profile
-
-* Link Docker Hub: https://hub.docker.com/r/heremod/websphere-traditional
