@@ -1,0 +1,13 @@
+# - COMANDOS DOCKER
+# docker build -t ibm-n-d-8.5.5.13 .
+# ===============================================================
+FROM ubuntu:14.04
+# ===============================================================
+
+# WAS NETWORK DEPLOYMENT 8.5.5.13 (ADD)
+ADD /resources/IBM-ND-8.5.5.13.zip /opt
+
+# DESCOMPRIMIR
+RUN apt install unzip
+RUN unzip -qd opt/ opt/IBM-ND-8.5.5.13.zip
+RUN rm opt/IBM-ND-8.5.5.13.zip

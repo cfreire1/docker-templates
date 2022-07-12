@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  ibm-was:
+    image: was-server:latest
+    volumes:
+      - ./volume/AppSrv01:/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/
+      - ./volume/aplications:/opt/IBM/WebSphere/AppServer/aplications
+    ports: #https://www.ibm.com/docs/en/was/8.5.5?topic=cps-port-number-settings-2
+      - 9060:9060
+      - 9043:9043
+      - 9080:9080
+      # - 9443:9443
+      # - 2809:2809
+      # - 9402:9402
+      # - 9403:9403
+      # - 9353:9353
+      # - 5557:5557
+      # - 9633:9633
+      # - 5558:5558
+      # - 5578:5578
+      # - 9100:9100
+      # - 9401:9401
+      # - 7276:7276
+      # - 7286:7286
+      # - 5060:5060
+      # - 5061:5061
+      # - 8880:8880
+      # - 8080:8080
+      # - 8008:8008

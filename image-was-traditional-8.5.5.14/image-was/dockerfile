@@ -1,0 +1,13 @@
+# - COMANDOS DOCKER
+# docker build -t ibm-8.5.5.14 .
+# ===============================================================
+FROM ubuntu:14.04
+# ===============================================================
+
+# WAS 8.5.5.14 (ADD)
+ADD /resources/IBM-8.5.5.14.zip /opt
+
+# DESCOMPRIMIR
+RUN apt install unzip
+RUN unzip -qd opt/ opt/IBM-8.5.5.14.zip
+RUN rm opt/IBM-8.5.5.14.zip
