@@ -3,7 +3,7 @@
 
 Proyecto docker de servidor was  
 * publicado en docker hub 
-***
+
 # WebSphere Application Server
 * PATH: /traditional/8.5.5.14
 * repo: heremod/websphere-traditional
