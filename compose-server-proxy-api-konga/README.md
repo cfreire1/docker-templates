@@ -12,7 +12,6 @@
 # konga
 * https://hub.docker.com/r/pantsel/konga
 
-***
 # Notas
 * https://refactorizando.com/arquitectura-microservicios-kong-konga/
 * https://www.youtube.com/watch?v=iz6i-RwsrJw&t=866s
