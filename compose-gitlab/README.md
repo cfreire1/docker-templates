@@ -1,7 +1,7 @@
 # Sitio Oficial:
 * Link: https://registry.hub.docker.com/r/gitlab/gitlab-ce/
 
-# Descripcion del proyecto:
+# Descripcion:
 * Docker Compose de git lab community
 
 # Instalacion
