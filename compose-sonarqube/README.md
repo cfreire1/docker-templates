@@ -1,7 +1,7 @@
 # Sitio Oficial:
 * Link: https://hub.docker.com/_/sonarqube
 
-# Descripcion del proyecto:
+# Descripcion:
 * Docker Compose de sonanarqube con bd posgresql
 
 
