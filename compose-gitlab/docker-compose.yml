@@ -1,0 +1,16 @@
+version: '3.6'
+
+services:
+  git-lab:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    hostname: localhost
+    ports:
+      - '80:80'
+      #- '8443:443'
+      - '1001:22'
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
+      
