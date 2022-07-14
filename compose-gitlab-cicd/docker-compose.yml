@@ -1,0 +1,38 @@
+version: '3.6'
+
+services:
+
+#---------------------------------------git-lab
+  gitlab-web:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab-web
+    restart: always
+    hostname: localhost
+    networks:
+      - my-custom-network
+    ports:
+      - '80:80'
+      - '443:443'
+      - '1001:22'
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
+
+#---------------------------------------git runner
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: always
+    depends_on:
+      - gitlab-web
+    networks:
+      - my-custom-network 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock #esto es importante ya que necesita hablar con su demonio docker local desde dentro de la instancia del contenedor
+      - ./gitlabrunner/etc:/etc/gitlab-runner
+      - ./gitlabrunner/home:/home/gitlab-runner
+
+networks:
+  my-custom-network:
+    external: true
