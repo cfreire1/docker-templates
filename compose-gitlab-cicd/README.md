@@ -5,14 +5,16 @@
 * Git lab community con runner y repositorios
 * (Material de estudio)
 
-# Configurar Network custom 
-Configurar el siguiente network
+# Instrucciones 
+
+# 1. Agregar custom Network  
+* Configurar el siguiente network
 ```
     docker network create -d bridge my-custom-network
 
 ```
 
-# Iniciar (GIT-LAB-CI)
+# 2. Iniciar compose (GIT-LAB-CI)
 1. Iniciar contenedores y revisar si estan corriendo
 ```
     docker-compose up -d 
@@ -24,20 +26,21 @@ Configurar el siguiente network
     58781119d54d   gitlab/gitlab-ce:latest       "/assets/wrapper"        5 seconds ago   Up 3 seconds (health: starting)           gitlab-web
 
 ```
-3. Ingresar el siguiente comando en el teminal para obtener pasword generada
+2. Ingresar el siguiente comando en el teminal para obtener pasword generada
 ```
     docker exec -it <ID-CONTAINER> grep 'Password:' /etc/gitlab/initial_root_password
     docker exec -it gitlab-web grep 'Password:' /etc/gitlab/initial_root_password
 ```
-2. Ingresar a url
+3. Ingresar a url web
 ```
     http://localhost/users/sign_in
     user: root
     pass: <password generada>
 ```
-# Registrar (GIT-RUNNER)
-1. Una vez que se encuentren corriendo los 2 contenedores el runner y el git tendremos el siguiente error que es normal en el contenedor runner
-    * Y el error se debe a que aún no hemos configurado ni registrado nuestro corredor en ningún servidor de Gitlab.
+# 3. Registrar (GIT-RUNNER)
+1. Una vez que se encuentren corriendo los 2 contenedores, el runner y el git-web
+    * Tendremos el siguiente error en el log del contenedor runner, lo cual es lo esperable
+        * Y el error se debe a que aún no hemos configurado ni registrado nuestro corredor en ningún servidor de Gitlab.
 ```
     // error esperable
     gitlab-runner  | ERROR: Failed to load config stat /etc/gitlab-runner/config.toml: no such file or directory  builds=0
@@ -46,10 +49,10 @@ Configurar el siguiente network
 ```
     docker exec -it gitlab-runner bash
 ```
-3. Dentro del contenedor Registramos nuestro corredor 
+3. Dentro del contenedor gitlab-runner registramos nuestro corredor 
     * Utilizaremos la URL: `http://gitlab-web/`
-    * Token: (Se obtiene desde GitLab)
-        * Menu/Admin/Overview/Runners
+    * Token: (Se obtiene desde GitLab-web)
+        * Ir a `Menu/Admin/Overview/Runners`
         * Hacer click en boton azul 'Register an instance runner' y copiar token
 ```
     //registrar elegir solo una
@@ -75,7 +78,6 @@ Configurar el siguiente network
     Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded! 
 
 ```
-
 * Tras ejecutar [runner register:op1]
     * configurar archivo `config.toml` y agregar la siguiente configuracion:
     ...
@@ -85,10 +87,9 @@ Configurar el siguiente network
         network_mode = "host"
 
     ```
-
-* Actualizar(F5) y revisar `Menu/Admin/Overview/Runners`, debe aparecer el runner en verde
-
-# Configurar runner shared para repositorio
+* Tras ejecutar [runner register:op2] 
+    * Seguir a la siguiente seccion
+# 4. OP1 - Configurar runner shared para repositorio
 1. En `Menu/Admin/Overview/Runners` seleccionar a editar runner creado 
     * Marcamos o activamos la opcion `Run untagged jobs` y guardamos cambios
 
@@ -102,7 +103,7 @@ Configurar el siguiente network
         * Agregamos nuestro Pipelines y hacemos commit al repositorio.
         * (Comenzara automaticamente la ejecucion de nuestro primer Pipelines)
 
-# Configurar runner para repositorio
+#  4. OP2 - Configurar runner para repositorio
 1. Ir a repositorio y revisamos
     * `<repo_selecionado>/setting/CICD/RUNNERS`
         * Desactivamos `Enable shared runners for this project`
@@ -120,7 +121,7 @@ Configurar el siguiente network
         * Agregamos nuestro Pipelines y hacemos commit al repositorio.
         * (Comenzara automaticamente la ejecucion de nuestro primer Pipelines)
 
-# Revisar ejecucion Pipelines
+# 5. Revisar ejecucion Pipelines
 4. Revisar ejecucion Pipelines
     * Ir `<repo_selecionado>/Pipelines`
         * Pipelines 
