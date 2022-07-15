@@ -1,16 +1,23 @@
 version: '3.6'
 
 services:
-  git-lab:
+  gitlab:
     image: gitlab/gitlab-ce:latest
+    container_name: gitlab
     restart: always
     hostname: localhost
+    # networks:
+    #   - my-custom-network
+    environment: 
+      GITLAB_OMNIBUS_CONFIG: | #cambio de puerto
+        external_url 'http://localhost:3201' 
     ports:
-      - '80:80'
-      #- '8443:443'
-      - '1001:22'
+      - '3201:3201'
+      # - '3202:443'
+      # - '3203:22'
     volumes:
       - ./gitlab/config:/etc/gitlab
       - ./gitlab/logs:/var/log/gitlab
       - ./gitlab/data:/var/opt/gitlab
+
       

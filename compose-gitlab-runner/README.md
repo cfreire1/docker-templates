@@ -7,39 +7,25 @@
 
 # Instrucciones 
 
-# 1. Agregar custom Network  
-* Configurar el siguiente network
-```
-    docker network create -d bridge my-custom-network
-
-```
-
-# 2. Iniciar compose (GIT-LAB-CI)
-1. Iniciar contenedores y revisar si estan corriendo
+# 1. Iniciar compose (GIT-LAB-RUNNER)
+1. Asegurarse de estar corriendo el contenedor que pertenece a gitlab sitio web
+2. Iniciar contenedor runner 
 ```
     docker-compose up -d 
 ```
+3. Verificar contenedores corriendo
 ```
-    root# docker ps
+    docker ps
+
     CONTAINER ID   IMAGE                         COMMAND                  CREATED         STATUS                            PORTS   NAMES
     abbcb0ad083e   gitlab/gitlab-runner:latest   "/usr/bin/dumb-init …"   4 seconds ago   Up 3 seconds                              gitlab-runner
-    58781119d54d   gitlab/gitlab-ce:latest       "/assets/wrapper"        5 seconds ago   Up 3 seconds (health: starting)           gitlab-web
+    58781119d54d   gitlab/gitlab-ce:latest       "/assets/wrapper"        5 seconds ago   Up 3 seconds (health: starting)           gitlab
 
 ```
-2. Ingresar el siguiente comando en el teminal para obtener pasword generada
-```
-    docker exec -it <ID-CONTAINER> grep 'Password:' /etc/gitlab/initial_root_password
-    docker exec -it gitlab-web grep 'Password:' /etc/gitlab/initial_root_password
-```
-3. Ingresar a url web
-```
-    http://localhost/users/sign_in
-    user: root
-    pass: <password generada>
-```
-# 3. Registrar (GIT-RUNNER)
-1. Una vez que se encuentren corriendo los 2 contenedores, el runner y el git-web
-    * Tendremos el siguiente error en el log del contenedor runner, lo cual es lo esperable
+
+# 2. Registrar (GIT-RUNNER)
+1. Una vez que se encuentren corriendo los 2 contenedores, el gitlab-runner y el gitlab
+    * Tendremos el siguiente error en el log del contenedor del gitlab-runner, lo cual es lo esperable
         * Y el error se debe a que aún no hemos configurado ni registrado nuestro corredor en ningún servidor de Gitlab.
 ```
     // error esperable
@@ -50,9 +36,9 @@
     docker exec -it gitlab-runner bash
 ```
 3. Dentro del contenedor gitlab-runner registramos nuestro corredor 
-    * Utilizaremos la URL: `http://gitlab-web/`
-    * Token: (Se obtiene desde GitLab-web)
-        * Ir a `Menu/Admin/Overview/Runners`
+    * Utilizaremos la URL: `http://gitlab:3201/`
+    * Token: (Se obtiene desde gitlab-web)
+        * Ir a sitio web `Menu/Admin/Overview/Runners`
         * Hacer click en boton azul 'Register an instance runner' y copiar token
 ```
     //registrar elegir solo una
@@ -150,4 +136,4 @@
     * https://stackoverflow.com/questions/52757357/create-custom-network-for-docker-compose-via-command-line
     * config.toml: https://stackoverflow.com/questions/38737862/gitlab-ci-add-net-host-option-to-docker
 
-\
+
