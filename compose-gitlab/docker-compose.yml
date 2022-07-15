@@ -5,9 +5,15 @@ services:
     image: gitlab/gitlab-ce:latest
     container_name: gitlab
     restart: always
+    deploy:
+      resources:
+          limits:
+            cpus: '1'
+            memory: 100M
+          reservations:
+            cpus: '3'
+            memory: 2000M
     hostname: localhost
-    # networks:
-    #   - my-custom-network
     environment: 
       GITLAB_OMNIBUS_CONFIG: | #cambio de puerto
         external_url 'http://localhost:3201' 

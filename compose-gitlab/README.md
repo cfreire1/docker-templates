@@ -3,6 +3,7 @@
 
 # Descripcion:
 * Docker Compose de git lab community
+* (Material para estudio)
 
 # Instrucciones
 # Iniciar compose (GIT-LAB)

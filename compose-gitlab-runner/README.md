@@ -2,11 +2,10 @@
 * Link: https://registry.hub.docker.com/r/gitlab/gitlab-ce/
 
 # Descripcion:
-* Git lab community con runner y repositorios
-* (Material de estudio)
+* Git lab runner 
+* (Material para estudio)
 
 # Instrucciones 
-
 # 1. Iniciar compose (GIT-LAB-RUNNER)
 1. Asegurarse de estar corriendo el contenedor que pertenece a gitlab sitio web
 2. Iniciar contenedor runner 
@@ -22,8 +21,19 @@
     58781119d54d   gitlab/gitlab-ce:latest       "/assets/wrapper"        5 seconds ago   Up 3 seconds (health: starting)           gitlab
 
 ```
+# 2. Network
+* Crear network
+```
+    docker network create --attachable network-gitlab
+```
 
-# 2. Registrar (GIT-RUNNER)
+* Agregar contenedor a network
+```
+    docker network connect network-gitlab gitlab
+    docker network connect network-gitlab gitlab-runner
+```
+
+# 3. Registrar (GIT-RUNNER)
 1. Una vez que se encuentren corriendo los 2 contenedores, el gitlab-runner y el gitlab
     * Tendremos el siguiente error en el log del contenedor del gitlab-runner, lo cual es lo esperable
         * Y el error se debe a que aún no hemos configurado ni registrado nuestro corredor en ningún servidor de Gitlab.
