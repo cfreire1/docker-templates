@@ -147,15 +147,20 @@
     * https://twig2let.github.io/docker/docker_networkBetweenMultipleDockerComposeServices.html
     * https://stackoverflow.com/questions/52757357/create-custom-network-for-docker-compose-via-command-line
     * config.toml: https://stackoverflow.com/questions/38737862/gitlab-ci-add-net-host-option-to-docker
-
+    * https://medium.com/devops-with-valentine/how-to-build-a-docker-image-and-push-it-to-the-gitlab-container-registry-from-a-gitlab-ci-pipeline-acac0d1f26df
 
 * yml:
     * https://forge.etsi.org/rep/help/ci/docker/using_docker_build.md
 	* https://gitlab.com/gitlab-org/gitlab-foss/-/issues/17769
 	* https://forum.gitlab.com/t/example-gitlab-runner-docker-compose-configuration/67344/1
+    * https://www.adictosaltrabajo.com/2018/04/10/primeros-pasos-con-gitlab-ci/
 
     * VARIABLES:
-	    * https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project
+	    * https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+        * http://mpegx.int-evry.fr/software/help/ci/environments/index.md
+        * https://stackoverflow.com/questions/66673631/how-to-trigger-a-gitlab-pipeline-for-a-tagged-commit-on-branch-master
+        * https://docs.gitlab.com/ee/ci/yaml/#tags
+        * https://docs.gitlab.com/ee/ci/pipelines/
 
     * grep
 	    * https://ubunlog.com/comando-grep/?msclkid=6ee599ecc80711ec922549d3ff968769

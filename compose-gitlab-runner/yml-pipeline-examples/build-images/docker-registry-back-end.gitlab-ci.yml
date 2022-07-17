@@ -1,0 +1,64 @@
+# - Descripcion de yml:
+#   - build-and-push: contruye la imagen y la sube al registry privado
+#   - pull-and-run: descarga la imagen desde registry y crea un contenedor de la misma
+# 
+# NOTA: mi registry no tiene user y pass
+
+# Las etapas
+stages:
+  - build
+  - staging
+  
+build-and-push:
+  stage: build
+  image: docker:19.03.12
+  services:
+    # usara servicio docker in docker
+    - docker:19.03.12-dind
+  variables:  # variables locales
+    FULL_NAME_PROJECT: img-$CI_PROJECT_NAME
+  script:
+    - docker build -t $FULL_NAME_PROJECT .
+    - docker tag $FULL_NAME_PROJECT $MY_REGISTRY_URL/$FULL_NAME_PROJECT:1.0.0
+    - docker push $MY_REGISTRY_URL/$FULL_NAME_PROJECT:1.0.0
+  rules: 
+    #Solo se ejecuta en master 
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      # Indica siempre
+      when: always
+  tags: 
+     # hace referencia al tag runner 
+    - runner-docker
+
+
+pull-and-run:
+  stage: staging
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  variables: # variables locales
+    FULL_NAME_PROJECT: img-$CI_PROJECT_NAME
+  script:
+
+    # Bajando la imagen desde MY_REGISTRY
+    - docker pull $MY_REGISTRY_URL/$FULL_NAME_PROJECT:1.0.0
+
+    # login MY_REGISTRY
+    # - docker login -u $MY_REGISTRY_USER -p $MY_REGISTRY_PASS $MY_REGISTRY_URL
+
+    # Si existe contenedor: 1. Lo detiene , 2 .lo borra 
+    - if [ $( docker ps -a | grep $CI_PROJECT_NAME | wc -l ) -gt 0 ]; then (docker stop $CI_PROJECT_NAME && docker rm $CI_PROJECT_NAME)fi
+
+    # crea u nuevo contenedor a partir de la imagen
+    - docker run -d -p 5000:8080 --name $CI_PROJECT_NAME $MY_REGISTRY_URL/$FULL_NAME_PROJECT:1.0.0
+
+    # logout MY_REGISTRY
+    # - docker logout $MY_REGISTRY_URL
+  rules: 
+    #Solo se ejecuta en master 
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    # Indica siempre
+      when: always 
+  tags:  
+    # hace referencia al tag runner 
+    - runner-docker

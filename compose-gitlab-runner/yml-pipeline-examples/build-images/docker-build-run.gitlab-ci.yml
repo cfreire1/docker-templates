@@ -1,3 +1,5 @@
+#deploy-docker:  que contruye la imagen y luego la corre en contenedor 
+
 stages: 
   - build
 
