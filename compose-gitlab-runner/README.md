@@ -149,3 +149,14 @@
     * config.toml: https://stackoverflow.com/questions/38737862/gitlab-ci-add-net-host-option-to-docker
 
 
+* yml:
+    * https://forge.etsi.org/rep/help/ci/docker/using_docker_build.md
+	* https://gitlab.com/gitlab-org/gitlab-foss/-/issues/17769
+	* https://forum.gitlab.com/t/example-gitlab-runner-docker-compose-configuration/67344/1
+
+    * VARIABLES:
+	    * https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project
+
+    * grep
+	    * https://ubunlog.com/comando-grep/?msclkid=6ee599ecc80711ec922549d3ff968769
+	    * https://yaroslavgrebnov.com/blog/bash-docker-check-container-existence-and-status/
