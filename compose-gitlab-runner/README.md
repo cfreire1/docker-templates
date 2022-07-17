@@ -52,33 +52,35 @@
         * Hacer click en boton azul 'Register an instance runner' y copiar token
 ```
     //registrar elegir solo una
-    [op1] gitlab-runner register
-    [op2] gitlab-runner register --docker-network-mode 'host'
+        [op1] gitlab-runner register
+        [op2] gitlab-runner register --docker-network-mode 'host' --docker-volumes /var/run/docker.sock:/var/run/docker.sock
 
-    //Ejemplo de registro
-    Enter the GitLab instance URL (for example, https://gitlab.com/):
-        http://gitlab-web/  
-    Enter the registration token:
-        8JLD4WogjkDoonPshxDC
-    Enter a description for the runner:
-        [60bf953184e1]: runnershared
-    Enter tags for the runner (comma-separated):
-        runner-shared
-    Enter optional maintenance note for the runner:
+    //Ejemplo de registro de runner de opciones (op1 o op2)
+        Enter the GitLab instance URL (for example, https://gitlab.com/):
+            http://gitlab-web/  
+        Enter the registration token:
+            8JLD4WogjkDoonPshxDC
+        Enter a description for the runner:
+            [60bf953184e1]: runnershared
+        Enter tags for the runner (comma-separated):
+            runner-shared
+        Enter optional maintenance note for the runner:
 
-    Registering runner... succeeded                     runner=8JLD4Wog
-    Enter an executor: shell, ssh, docker+machine, docker-ssh+machine, parallels, docker, docker-ssh, virtualbox, kubernetes, custom:
-        docker
-    Enter the default Docker image (for example, ruby:2.7):
-        ubuntu
-    Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded! 
+        Registering runner... succeeded                     runner=8JLD4Wog
+        Enter an executor: shell, ssh, docker+machine, docker-ssh+machine, parallels, docker, docker-ssh, virtualbox, kubernetes, custom:
+            docker
+        Enter the default Docker image (for example, ruby:2.7):
+            docker:19.03.12
+        Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded! 
 
 ```
 * Tras ejecutar [runner register:op1]
-    * configurar archivo `config.toml` y agregar la siguiente configuracion:
+    * configurar archivo `config.toml` y agregar o modificar la siguiente configuracion:
     ...
     ```
         [runners.docker]
+        ...
+        volumes = ["/cache","/var/run/docker.sock:/var/run/docker.sock"]
         ...
         network_mode = "host"
 

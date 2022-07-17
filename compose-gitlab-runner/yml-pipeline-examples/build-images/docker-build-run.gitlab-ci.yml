@@ -1,0 +1,12 @@
+stages: 
+  - build
+
+deploy-docker:
+  stage: build
+  image: docker:19.03.12
+  services:
+  - docker:19.03.12-dind
+  script:
+    - "ls"
+    - docker build -t img-$CI_PROJECT_NAME .
+    - docker run -d -p 5000:5000 --name $CI_PROJECT_NAME img-$CI_PROJECT_NAME

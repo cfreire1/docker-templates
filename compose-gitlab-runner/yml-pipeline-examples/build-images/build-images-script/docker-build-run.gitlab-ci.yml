@@ -1,0 +1,15 @@
+stages: 
+  - build
+  
+before_script:
+  - docker info
+
+build-docker:
+  stage: build
+  image: docker:19.03.12
+  services:
+  - docker:19.03.12-dind
+  script:
+    - "ls"
+    - /bin/sh ./script-image-container.sh
+  

@@ -5,14 +5,14 @@ services:
     image: gitlab/gitlab-runner:latest
     container_name: gitlab-runner
     restart: always
-    deploy:
-      resources:
-          limits:
-            cpus: '1'
-            memory: 100M
-          reservations:
-            cpus: '3'
-            memory: 2000M
+    # deploy:
+    #   resources:
+    #       limits:
+    #         cpus: '1'
+    #         memory: 100M
+          # reservations:
+          #   cpus: '3'
+          #   memory: 2000M
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock #esto es importante ya que necesita hablar con su demonio docker local desde dentro de la instancia del contenedor
       - ./gitlabrunner/etc:/etc/gitlab-runner
