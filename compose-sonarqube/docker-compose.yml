@@ -4,7 +4,6 @@ services:
   dbsonnar:
     image: postgres:latest
     container_name: dbsonnar
-    privileged: true
     environment:
       POSTGRES_USER: sonar
       POSTGRES_PASSWORD: sonar
@@ -18,7 +17,6 @@ services:
   sonarqube:
     image: sonarqube:latest
     container_name: sonarqube
-    privileged: true
     depends_on: #Indiqua que debe ejecutarse primero
       - dbsonnar
     environment: # Variables de entorno
