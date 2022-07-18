@@ -23,7 +23,7 @@
     pass: <password generada>
 ```
 
-3 Desactivar Auto DevOps
+3. Desactivar Auto DevOps
 * ir a Menu/Admin
     * Setting/'CI/CD'
         * Expandir contendido (Continuous Integration and Deployment)
