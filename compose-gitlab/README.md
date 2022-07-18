@@ -23,6 +23,13 @@
     pass: <password generada>
 ```
 
+3 Desactivar Auto DevOps
+* ir a Menu/Admin
+    * Setting/'CI/CD'
+        * Expandir contendido (Continuous Integration and Deployment)
+            * (Desmarcar) Default to Auto DevOps pipeline for all projects
+            * Guardar cambios
+
 # Notas
 
 * change Port
