@@ -1,0 +1,135 @@
+# ver 2.0
+# Flujo de trabajo de desarrollo
+stages:
+  - compile #Compilando fuentes
+  - sonar # envio a sonanar
+  - build # contruccion de artefacto
+  - staging # pre-productivo
+  # - production # Instalacion y funcionanado
+
+# =============================================Variables
+variables:
+  # sonnarqube
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  SONAR_HOST_URL: "<SONAR_HOST_URL>"
+  SONAR_TOKEN: "<SONAR_TOKEN>"
+  
+  #registry
+  MY_REGISTRY_PASS: <MY_REGISTRY_PASS>
+  MY_REGISTRY_USER: <MY_REGISTRY_USER>
+  MY_REGISTRY_URL: <REGISTRY_URL>
+
+  # Imagenes
+  IMG_NAME_PROJECT: img-$CI_PROJECT_NAME
+  IMG_NAME_REGISTRY: $MY_REGISTRY_URL/$IMG_NAME_PROJECT
+
+# =============================================Etapas
+# Build Inicial
+build-init: # Alias de la tarea
+  stage: compile 
+  image: maven:3.6.3-jdk-11 # Imagen docker a utilizar
+  cache: 
+  # Mantiene en cache(persiste) ciertas ubicaciones o archivos ejecutadas en la tarea.
+  # Se debe especificar en la primera tarea que descarga dependencias etc, init (En orden de ejecucion)
+    - key:
+      paths:
+        - ./target/
+  script: #Seccion de script de acuerdo a la imagen descargada
+    - ls
+    - mvn package
+  only: # only : se indica que se ejecuta solo en ... etc
+    - develop
+  tags: #Hace referencia al que debe ocupar 
+    - runner-docker
+
+# Envio a sonnar
+sonarqube-check:
+  stage: sonar 
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  cache:
+    - key:
+      paths: 
+        - ./target/  #ubicacion cache necesario para 'sonar-scanner'
+    - key: "${CI_JOB_NAME}"
+      paths:
+        - .sonar/cache
+  script:
+    - sonar-scanner
+      -Dsonar.qualitygate.wait=true
+      -DskipTests=true
+      -Dsonar.host.url=$SONAR_HOST_URL 
+      -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.projectKey=$CI_PROJECT_NAME
+      -Dsonar.java.binaries=target/
+  allow_failure: true
+  only:
+    - develop
+  tags: 
+     # hace referencia al tag runner 
+    - runner-docker
+
+# contruye imagen
+build-container:
+  image: docker:19.03.12
+  stage: build
+  services:
+    - docker:19.03.12-dind
+  cache:
+    - key:
+      paths:
+        - ./target/ #ubicacion cache necesario para agregar contenido compilado en el dockerfile
+  script:
+    # Valida: Si existe contenedor: 1. Lo detiene , 2 .lo borra 
+    - if [ $( docker ps -a | grep --only-matching $CI_PROJECT_NAME | sort --unique | wc -l ) -gt 0 ]; then
+      (docker stop $CI_PROJECT_NAME && docker rm $CI_PROJECT_NAME)
+      fi
+    # Valida: Si existe imagen descargada: 1.lo borra
+    - if [ $( docker images -a | grep --only-matching $IMG_NAME_REGISTRY | sort --unique | wc -l  ) -gt 0  ]; then
+      (docker image rm $IMG_NAME_REGISTRY)
+      fi
+    
+    # Contruye imagen docker de proyecto springboot
+    - docker build -t $IMG_NAME_PROJECT .
+
+    # Creacion de docker tag para ser subido al registry
+    - docker tag $IMG_NAME_PROJECT $IMG_NAME_REGISTRY
+
+    # Luego de la creacion se hace push o sube la imagen al registry
+    - docker push $IMG_NAME_REGISTRY
+
+    # Se elimina imagen del proyecto spring boot
+    - docker image rm $IMG_NAME_PROJECT
+  only:
+    - develop
+  tags: 
+     # hace referencia al tag runner 
+    - runner-docker
+
+# Baja imagen y corre contenedor
+deploy-container:
+  stage: staging
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  script:
+
+    # Bajando la imagen desde MY_REGISTRY
+    - docker pull $IMG_NAME_REGISTRY
+
+    # login MY_REGISTRY
+    # - docker login -u $MY_REGISTRY_USER -p $MY_REGISTRY_PASS $MY_REGISTRY_URL
+
+    # Crea un nuevo contenedor a partir de la imagen descargada de MY_REGISTRY
+    - docker run -d -p 5000:8080 --name $CI_PROJECT_NAME $IMG_NAME_REGISTRY
+
+    # logout MY_REGISTRY
+    # - docker logout $MY_REGISTRY_URL 
+  only:
+    - develop
+  tags: 
+    # hace referencia al tag runner 
+    - runner-docker
+

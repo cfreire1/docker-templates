@@ -1,0 +1,43 @@
+# Comentario:
+# - Otra forma de llamar al sonnar con su imagen docker scaner, aqui se deben tener los compilados listos
+# - Ademas en el primera tarea(init), el que se encarga de compilar debe agregar cache para persistir './target/'
+
+stages:
+  - sonar
+
+# =============================================Variables
+variables:
+  # sonnarqube
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  SONAR_HOST_URL: "<URL_SONAR>"
+  SONAR_TOKEN: "<TOKEN_SONAR>"
+
+# https://docs.sonarqube.org/latest/analysis/gitlab-integration/
+# Envio a sonnar
+sonarqube-check:
+  stage: sonar 
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  cache:
+    - key:
+      paths: 
+        - ./target/  #ubicacion cache necesario para 'sonar-scanner'
+    - key: "${CI_JOB_NAME}"
+      paths:
+        - .sonar/cache
+  script:
+    - sonar-scanner
+      -Dsonar.qualitygate.wait=true
+      -DskipTests=true
+      -Dsonar.host.url=$SONAR_HOST_URL 
+      -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.projectKey=$CI_PROJECT_NAME
+      -Dsonar.java.binaries=target/
+  allow_failure: true
+  only:
+    - develop
+  tags: 
+     # hace referencia al tag runner 
+    - runner-docker
