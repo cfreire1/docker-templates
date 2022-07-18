@@ -19,7 +19,6 @@ sonarqube-check:
       -DskipTests=true
       -Dsonar.host.url=$SONAR_HOST_URL 
       -Dsonar.login=$SONAR_TOKEN 
-      -Dsonar.projectKey=${CI_COMMIT_BRANCH}
   allow_failure: true # Tiene permitido fallar
   only:
     # - merge_requests
