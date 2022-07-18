@@ -1,8 +1,7 @@
-#deploy-docker:  que contruye la imagen y luego la corre en contenedor 
-
-stages: 
+ stages: 
   - build
 
+#deploy-docker:  que contruye la imagen y luego corre el contenedor
 deploy-docker:
   stage: build
   image: docker:19.03.12

@@ -1,28 +1,12 @@
-# Explicacion:
-#   build-maven: 
-#     - Contruye un artefacto maven => jar
+stages:
+  - deploy
+
 #   deploy-docker: 
 #     - Ejecuta scrtips con validaciones
 #       - valida Si existe contenedor: 1. Lo detiene , 2 .lo borra 
 #       - valida Si existe imagen: 1 .lo borra
 #       - crea imagen
 #       - crea y corre contenedor
-  
-
-stages:
-  - build
-  - deploy
-
-build-maven:
-  stage: build
-  image: maven:3-jdk-8
-  script:
-    - "mvn package"
-  rules: 
-    #Solo se ejecuta en master 
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: always
-
 deploy-docker:
   stage: deploy
   image: docker:19.03.12

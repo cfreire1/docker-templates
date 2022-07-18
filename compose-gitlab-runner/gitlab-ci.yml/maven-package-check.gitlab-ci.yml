@@ -1,0 +1,14 @@
+stages:
+  - build
+
+#   build-maven: 
+#     - Contruye un artefacto maven => jar
+build-maven:
+  stage: build
+  image: maven:3-jdk-8
+  script:
+    - "mvn package"
+  rules: 
+    #Solo se ejecuta en master 
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: always
