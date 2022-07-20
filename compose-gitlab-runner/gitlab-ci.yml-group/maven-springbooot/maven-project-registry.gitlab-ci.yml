@@ -82,13 +82,17 @@ build-container:
       paths:
         - ./target/ #ubicacion cache necesario para agregar contenido compilado en el dockerfile
   script:
-    # Valida: Si existe contenedor: 1. Lo detiene , 2 .lo borra 
-    - if [ $( docker ps -a | grep --only-matching $CI_PROJECT_NAME | sort --unique | wc -l ) -gt 0 ]; then
-      (docker stop $CI_PROJECT_NAME && docker rm $CI_PROJECT_NAME)
+    # Valida: Si existe contenedor denenido: 1 .lo borra 
+    - if [ $( docker ps -a | grep 'Exited' | grep $CI_PROJECT_NAME | wc -l ) -gt 0 ]; then
+        (docker rm $CI_PROJECT_NAME)
+      fi
+    # Valida: Si existe contenedor corriendo: 1. Lo detiene , 2 .lo borra 
+    - if [ $( docker ps -a | grep 'Up'| grep $CI_PROJECT_NAME | wc -l ) -gt 0 ]; then
+        (docker stop $CI_PROJECT_NAME && docker rm $CI_PROJECT_NAME)
       fi
     # Valida: Si existe imagen descargada: 1.lo borra
-    - if [ $( docker images -a | grep --only-matching $IMG_NAME_REGISTRY | sort --unique | wc -l  ) -gt 0  ]; then
-      (docker image rm $IMG_NAME_REGISTRY)
+    - if [ $( docker images -a | grep $IMG_NAME_PROJECT | wc -l  ) -gt 0  ]; then
+        (docker image rm $IMG_NAME_PROJECT)
       fi
     
     # Contruye imagen docker de proyecto springboot
