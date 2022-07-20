@@ -12,6 +12,7 @@ services:
       - ./dbsonnar/data:/var/lib/postgresql/data
     ports:
       - 3309:3306
+      - 5432:5432
 
   #Sonnar  
   sonarqube:
