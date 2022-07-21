@@ -1,37 +1,44 @@
 
  * Sonarqube en proyecto maven
+ * LINK: https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-maven/
 
 ```
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-			  	<groupId>org.sonarsource.scanner.maven</groupId>
-				  <artifactId>sonar-maven-plugin</artifactId>
-                      <version>3.3.0.603</version>
-                      <executions>
-                        <execution>
-                          <phase>verify</phase>
-                          <goals>
-                            <goal>sonar</goal>
-                          </goals>
-                        </execution>
-                      </executions>
-             </plugin>
-		</plugins>
-	</build>
+<!-- Para permitir coverave en sonarqube-->
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 ```
 
 * Ejecucion
 
 ```
-    - mvn clean verify sonar 
-      -DskipTests=true 
-      -Dsonar.host.url=$SONAR_HOST_URL 
-      -Dsonar.organization=privado 
-      -Dsonar.login=$SONAR_TOKEN
+mvn clean verify sonar:sonar -Dsonar.host.url=<UTR_SONAR> -Dsonar.login=<TOKEN_SONAR> -Dsonar.java.binaries=target/ -Dsonar.java.coveragePlugin=jacoco -Dsonar.forceAnalysis=true -Dsonar.qualitygate.wait=true -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.junit.reportsPath=target/surefire-reports
 ```
 
