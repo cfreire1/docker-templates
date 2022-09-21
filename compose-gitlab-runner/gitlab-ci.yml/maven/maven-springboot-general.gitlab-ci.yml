@@ -1,0 +1,82 @@
+# ver 2.0
+# Flujo de trabajo de desarrollo
+stages:
+  - compile #Compilando fuentes
+  - build # contruccion de artefacto
+  - staging # pre-productivo
+  # - production # Instalacion y funcionanado
+
+# =============================================Variables
+variables:
+  # Imagenes
+  FULL_NAME_PROJECT: img-$CI_PROJECT_NAME
+  IMG_NAME_PROJECT: img-$CI_PROJECT_NAME
+
+# =============================================Etapas
+# Build Inicial
+build-init: # Alias de la tarea
+  stage: compile 
+  image: maven:3.6.3-jdk-11 # Imagen docker a utilizar
+  cache: 
+  # Mantiene en cache(persiste) ciertas ubicaciones o archivos ejecutadas en la tarea.
+  # Se debe especificar en la primera tarea que descarga dependencias etc, init (En orden de ejecucion)
+    - key:
+      paths:
+        - ./target/
+  script: #Seccion de script de acuerdo a la imagen descargada
+    - ls
+    - mvn package
+  only: # only : se indica que se ejecuta solo en ... etc
+    - develop
+  tags: #Hace referencia al que debe ocupar 
+    - runner-docker
+
+# contruye imagen
+build-container:
+  image: docker:19.03.12
+  stage: build
+  services:
+    - docker:19.03.12-dind
+  cache:
+    - key:
+      paths:
+        - ./target/ #ubicacion cache necesario para agregar contenido compilado en el dockerfile
+  script:
+    # Valida: Si existe contenedor denenido: 1 .lo borra 
+    - if [ $( docker ps -a | grep 'Exited' | grep $CI_PROJECT_NAME | wc -l ) -gt 0 ]; then
+        (docker rm $CI_PROJECT_NAME)
+      fi
+    # Valida: Si existe contenedor corriendo: 1. Lo detiene , 2 .lo borra 
+    - if [ $( docker ps -a | grep 'Up'| grep $CI_PROJECT_NAME | wc -l ) -gt 0 ]; then
+        (docker stop $CI_PROJECT_NAME && docker rm $CI_PROJECT_NAME)
+      fi
+    # Valida: Si existe imagen descargada: 1.lo borra
+    - if [ $( docker images -a | grep $IMG_NAME_PROJECT | wc -l  ) -gt 0  ]; then
+        (docker image rm $IMG_NAME_PROJECT)
+      fi
+    
+    # Contruye imagen docker de proyecto springboot
+    - docker build -t $IMG_NAME_PROJECT .
+
+  only:
+    - develop
+  tags: 
+     # hace referencia al tag runner 
+    - runner-docker
+
+# corre contenedor
+deploy-container:
+  stage: staging
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  script:
+
+    # Crea un nuevo contenedor a partir de la imagen contruida
+    - docker run -d -p 5000:8080 --name $CI_PROJECT_NAME $IMG_NAME_PROJECT
+ 
+  only:
+    - develop
+  tags: 
+    # hace referencia al tag runner 
+    - runner-docker
