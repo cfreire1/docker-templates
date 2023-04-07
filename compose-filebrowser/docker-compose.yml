@@ -1,0 +1,10 @@
+version: "3"
+services:
+  filebrowser:
+    image: hurlenko/filebrowser
+    container_name: filebrowser
+    ports:
+      - 32404:8080
+    restart: always
+    volumes:
+      - ./data:/data #Ubicacion local de donde crean los archivos de los contenedores.
