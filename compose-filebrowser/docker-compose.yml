@@ -7,4 +7,4 @@ services:
       - 32404:8080
     restart: always
     volumes:
-      - ./data:/data #Ubicacion local de donde crean los archivos de los contenedores.
+      - ./data:/data #Ubicacion local la cual quieres acceder
